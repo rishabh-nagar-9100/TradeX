@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { BarChart3, CandlestickChart, CircleDollarSign, RefreshCw, ShieldCheck } from 'lucide-react';
+import { BarChart3, CandlestickChart } from 'lucide-react';
 import { ThemeProvider } from './context/ThemeContext';
 import { WatchlistProvider } from './context/WatchlistContext';
 import DashboardLayout from './components/layout/DashboardLayout';
 import StockQuickStats from './components/dashboard/StockQuickStats';
 import Watchlist from './components/dashboard/Watchlist';
 import StockChart from './components/charts/StockChart';
+import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
 import { useStockData } from './hooks/useStockData';
 import { TIME_RANGES, getKnownStocks } from './services/stockDataService';
-import { useWatchlist } from './context/watchlistStore';
 
 const CHART_TYPES = [
   { id: 'candlestick', label: 'Candles', icon: CandlestickChart },
@@ -102,58 +102,6 @@ function DashboardContent({ activeStock, onSelectStock }) {
   );
 }
 
-function PortfolioView({ onSelectStock }) {
-  const { watchlist } = useWatchlist();
-  const symbols = watchlist.length ? watchlist : ['AAPL', 'MSFT'];
-
-  return (
-    <div className="fade-in space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Portfolio</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">Track watched assets and jump back into analysis.</p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="glass rounded-2xl p-5">
-          <span className="text-sm text-slate-500 dark:text-slate-400">Tracked Symbols</span>
-          <div className="mt-2 text-3xl font-semibold">{symbols.length}</div>
-        </div>
-        <div className="glass rounded-2xl p-5">
-          <span className="text-sm text-slate-500 dark:text-slate-400">Data Mode</span>
-          <div className="mt-2 flex items-center gap-2 text-lg font-semibold">
-            <ShieldCheck className="w-5 h-5 text-brand-500" />
-            Auto fallback
-          </div>
-        </div>
-        <div className="glass rounded-2xl p-5">
-          <span className="text-sm text-slate-500 dark:text-slate-400">Refresh</span>
-          <div className="mt-2 flex items-center gap-2 text-lg font-semibold">
-            <RefreshCw className="w-5 h-5 text-brand-500" />
-            Manual + mock ticks
-          </div>
-        </div>
-      </div>
-      <div className="glass rounded-2xl p-4">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-bold">Holdings Watch</h2>
-          <CircleDollarSign className="w-5 h-5 text-brand-500" />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {symbols.map(symbol => (
-            <button
-              key={symbol}
-              onClick={() => onSelectStock(symbol)}
-              className="rounded-lg border border-slate-200 bg-white p-4 text-left transition hover:border-brand-500 dark:border-dark-border dark:bg-dark-card"
-            >
-              <span className="font-bold">{symbol}</span>
-              <span className="block text-sm text-slate-500 dark:text-slate-400">Open dashboard analysis</span>
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function WatchlistView({ activeStock, onSelectStock }) {
   return (
     <div className="fade-in grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -234,7 +182,7 @@ function App() {
 
   const renderView = () => {
     if (activeView === 'portfolio') {
-      return <PortfolioView onSelectStock={handleSelectStock} />;
+      return <PortfolioDashboard />;
     }
 
     if (activeView === 'watchlist') {
