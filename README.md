@@ -19,6 +19,13 @@ TradeX is a production-grade, real-time stock market dashboard built with React.
 - **Charting**: `lightweight-charts`
 - **State Management**: React Context + Hooks (`useState`, `useEffect`, `useRef`)
 
+## 📸 Screenshots
+
+![TradeX dashboard screenshot 1](docs/screenshots/project-screenshot-1.png)
+![TradeX dashboard screenshot 2](docs/screenshots/project-screenshot-2.png)
+![TradeX dashboard screenshot 3](docs/screenshots/project-screenshot-3.png)
+![TradeX dashboard screenshot 4](docs/screenshots/project-screenshot-4.png)
+
 ## ⚙️ Setup Instructions
 
 To run this project locally:
