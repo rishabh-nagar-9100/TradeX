@@ -4,6 +4,9 @@ TradeX is a production-grade, real-time stock market dashboard built with React.
 
 ## ✨ Features
 
+- **Sentinel AI Quant Intelligence Widget**: Integrates FinBERT point-in-time sentiment analysis, confidence meters, and AI Topic Risk Badges (⚠️ Guidance Cut, ⚖️ Litigation Risk, 🚚 Supply Chain Risk, 🏛️ Regulatory Action, 🏢 Restructuring).
+- **Interactive Walk-Forward Backtest Modal**: Presents Sharpe Ratio, Information Coefficient ($IC$), Win Rate, Max Drawdown, and benchmark comparisons vs. Buy-and-Hold / Random baselines with interactive Plotly HTML report embeds.
+- **Chart Sentiment Overlays**: Overlays green/red AI sentiment signal markers directly onto TradingView candlestick charts.
 - **Real-Time Mock Data Engine**: Simulates live tick-by-tick market fluctuations natively, without hitting API rate limits.
 - **Advanced Interactive Charting**: Uses TradingView's `lightweight-charts` to provide highly optimized candlestick charts with time scales.
 - **Watchlist Management**: Add or remove favorite stocks, managed globally using Context API and persisted via `localStorage`.
@@ -14,10 +17,11 @@ TradeX is a production-grade, real-time stock market dashboard built with React.
 ## 🧠 Tech Stack
 
 - **Framework**: React 18 (Vite)
-- **Styling**: Tailwind CSS v3
+- **Quant AI Backend**: Sentinel REST API (`FastAPI` on `http://localhost:8000`)
+- **Styling**: Tailwind CSS v3 (Glassmorphism Dark/Light theme)
 - **Icons**: `lucide-react`
 - **Charting**: `lightweight-charts`
-- **State Management**: React Context + Hooks (`useState`, `useEffect`, `useRef`)
+- **State Management**: React Context + Hooks (`useSentinelData`, `useStockData`)
 
 ## 📸 Screenshots
 

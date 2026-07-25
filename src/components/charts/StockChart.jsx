@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { CandlestickSeries, ColorType, LineSeries, createChart } from 'lightweight-charts';
 import { useTheme } from '../../context/themeStore';
 
-export default function StockChart({ data, type = 'candlestick' }) {
+export default function StockChart({ data, type = 'candlestick', sentiment }) {
   const chartContainerRef = useRef();
   const chartRef = useRef(null);
   const seriesRef = useRef(null);
@@ -77,7 +77,7 @@ export default function StockChart({ data, type = 'candlestick' }) {
     };
   }, [theme, type]);
 
-  // Update data when it changes
+  // Update data and AI sentiment markers when they change
   useEffect(() => {
     try {
       if (seriesRef.current && data?.length) {
@@ -85,11 +85,33 @@ export default function StockChart({ data, type = 'candlestick' }) {
           ? data.map(item => ({ time: item.time, value: item.close }))
           : data;
         seriesRef.current.setData(seriesData);
+
+        if (sentiment && data.length > 5) {
+          const score = sentiment.sentiment_score ?? 0;
+          const isBullish = score > 0.1;
+          const isBearish = score < -0.1;
+          const lastBar = data[data.length - 1];
+
+          if ((isBullish || isBearish) && lastBar?.time) {
+            const markers = [
+              {
+                time: lastBar.time,
+                position: isBullish ? 'belowBar' : 'aboveBar',
+                color: isBullish ? '#10b981' : '#ef4444',
+                shape: isBullish ? 'arrowUp' : 'arrowDown',
+                text: `AI ${isBullish ? 'Bullish' : 'Bearish'} (${score.toFixed(2)})`,
+              },
+            ];
+            if (typeof seriesRef.current.setMarkers === 'function') {
+              seriesRef.current.setMarkers(markers);
+            }
+          }
+        }
       }
     } catch(e) {
-      console.error("Error updating data:", e);
+      console.error("Error updating data & markers:", e);
     }
-  }, [data, type]);
+  }, [data, type, sentiment]);
 
   return (
     <div className="w-full h-full min-h-[350px]" ref={chartContainerRef} />

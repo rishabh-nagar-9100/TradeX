@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useSentinelData } from '../../hooks/useSentinelData';
+import SentinelBacktestModal from './SentinelBacktestModal';
 import {
   Brain,
   TrendingUp,
@@ -11,6 +13,7 @@ import {
   ShieldAlert,
   FileText,
   RefreshCw,
+  BarChart2,
 } from 'lucide-react';
 
 const TOPIC_CONFIG = {
@@ -42,7 +45,8 @@ const TOPIC_CONFIG = {
 };
 
 export default function SentinelSentimentWidget({ activeStock }) {
-  const { sentiment, loading, refetch } = useSentinelData(activeStock);
+  const { sentiment, backtest, loading, refetch } = useSentinelData(activeStock);
+  const [modalOpen, setModalOpen] = useState(false);
 
   if (loading) {
     return (
@@ -109,13 +113,22 @@ export default function SentinelSentimentWidget({ activeStock }) {
           </div>
         </div>
 
-        <button
-          onClick={refetch}
-          className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-          title="Re-fetch Sentinel Data"
-        >
-          <RefreshCw className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl bg-brand-500/10 text-brand-500 border border-brand-500/20 hover:bg-brand-500/20 transition"
+          >
+            <BarChart2 className="w-3.5 h-3.5" />
+            Quant Analytics
+          </button>
+          <button
+            onClick={refetch}
+            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+            title="Re-fetch Sentinel Data"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-center">
@@ -179,6 +192,13 @@ export default function SentinelSentimentWidget({ activeStock }) {
           </div>
         </div>
       </div>
+
+      <SentinelBacktestModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        backtest={backtest}
+        ticker={activeStock}
+      />
     </div>
   );
 }

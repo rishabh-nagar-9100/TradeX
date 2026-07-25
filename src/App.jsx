@@ -9,6 +9,7 @@ import Watchlist from './components/dashboard/Watchlist';
 import StockChart from './components/charts/StockChart';
 import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
 import { useStockData } from './hooks/useStockData';
+import { useSentinelData } from './hooks/useSentinelData';
 import { TIME_RANGES, getKnownStocks } from './services/stockDataService';
 
 const CHART_TYPES = [
@@ -19,6 +20,7 @@ const CHART_TYPES = [
 function DashboardContent({ activeStock, onSelectStock }) {
   const [timeRange, setTimeRange] = useState('1D');
   const [chartType, setChartType] = useState('candlestick');
+  const { sentiment } = useSentinelData(activeStock);
   const {
     historicalData,
     currentPrice,
@@ -92,7 +94,7 @@ function DashboardContent({ activeStock, onSelectStock }) {
             {loading ? (
                <div className="w-full h-full animate-pulse bg-slate-200 dark:bg-slate-700/50 rounded-xl"></div>
             ) : (
-               <StockChart data={historicalData} type={chartType} />
+               <StockChart data={historicalData} type={chartType} sentiment={sentiment} />
             )}
           </div>
         </div>
