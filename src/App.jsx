@@ -4,6 +4,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { WatchlistProvider } from './context/WatchlistContext';
 import DashboardLayout from './components/layout/DashboardLayout';
 import StockQuickStats from './components/dashboard/StockQuickStats';
+import SentinelSentimentWidget from './components/dashboard/SentinelSentimentWidget';
 import Watchlist from './components/dashboard/Watchlist';
 import StockChart from './components/charts/StockChart';
 import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
@@ -42,6 +43,8 @@ function DashboardContent({ activeStock, onSelectStock }) {
         onRefresh={refresh}
         loading={loading} 
       />
+
+      <SentinelSentimentWidget activeStock={activeStock} />
 
       {dataSource?.fallbackReason && (
         <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
