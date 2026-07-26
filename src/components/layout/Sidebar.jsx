@@ -1,8 +1,9 @@
-import { LayoutDashboard, TrendingUp, PieChart, Star, Settings } from 'lucide-react';
+import { LayoutDashboard, TrendingUp, PieChart, Star, Settings, Brain } from 'lucide-react';
 
 export default function Sidebar({ activeView, onViewChange, isOpen, onClose }) {
   const links = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'sentinel', label: 'Sentinel Quant AI', icon: Brain },
     { id: 'portfolio', label: 'Portfolio', icon: PieChart },
     { id: 'watchlist', label: 'Watchlist', icon: Star },
     { id: 'markets', label: 'Markets', icon: TrendingUp },

@@ -5,6 +5,7 @@ import { WatchlistProvider } from './context/WatchlistContext';
 import DashboardLayout from './components/layout/DashboardLayout';
 import StockQuickStats from './components/dashboard/StockQuickStats';
 import SentinelSentimentWidget from './components/dashboard/SentinelSentimentWidget';
+import SentinelView from './components/dashboard/SentinelView';
 import Watchlist from './components/dashboard/Watchlist';
 import StockChart from './components/charts/StockChart';
 import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
@@ -186,6 +187,10 @@ function App() {
   };
 
   const renderView = () => {
+    if (activeView === 'sentinel') {
+      return <SentinelView activeStock={activeStock} />;
+    }
+
     if (activeView === 'portfolio') {
       return <PortfolioDashboard />;
     }
