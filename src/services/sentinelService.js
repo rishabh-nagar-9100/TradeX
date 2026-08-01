@@ -1,10 +1,18 @@
 /**
  * Sentinel AI Quantitative API Client Service for TradeX.
  * Connects to Sentinel REST server (http://localhost:8000) with fallback resilience.
+ *
+ * Supports three signal states:
+ * - "ready": Pre-computed signal fetched from Supabase (<50ms).
+ * - "queued": Background ingestion dispatched; polls until ready.
+ * - "fallback": Sentinel backend offline; uses deterministic mock.
  */
 
 const BASE_URL =
-  import.meta.env.VITE_SENTINEL_API_URL || 'http://localhost:8000';
+  import.meta.env.VITE_SENTINEL_API_URL || 'http://127.0.0.1:8000';
+
+const POLL_INTERVAL_MS = 3000; // Poll every 3 seconds when queued
+const MAX_POLL_ATTEMPTS = 20;  // Give up after ~60 seconds
 
 /**
  * Deterministic mock fallback sentiment when Sentinel backend is offline.
@@ -30,27 +38,58 @@ function getMockSentiment(ticker) {
     },
     n_documents: 3,
     model_name: 'finbert',
+    status: 'fallback',
     is_fallback: true,
   };
 }
 
 /**
- * Fetch latest point-in-time sentiment signal for a ticker.
+ * Internal: single fetch to the sentiment API.
  */
-export async function fetchSentiment(ticker) {
+async function _fetchSentimentOnce(symbol) {
+  const res = await fetch(`${BASE_URL}/api/sentiment/${symbol}`);
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+  return await res.json();
+}
+
+/**
+ * Fetch latest point-in-time sentiment signal for a ticker.
+ * Automatically polls when status is "queued" (background ingestion in progress).
+ *
+ * @param {string} ticker - Stock ticker symbol
+ * @param {function} [onStatusChange] - Optional callback fired with status updates ("queued", "ready")
+ * @returns {Promise<object>} Sentiment signal data
+ */
+export async function fetchSentiment(ticker, onStatusChange) {
   const symbol = (ticker || 'AAPL').toUpperCase();
+
   try {
-    const res = await fetch(`${BASE_URL}/api/sentiment/${symbol}`);
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+    let data = await _fetchSentimentOnce(symbol);
+
+    // If signal is queued, poll until ready
+    if (data.status === 'queued') {
+      if (onStatusChange) onStatusChange('queued');
+
+      for (let attempt = 0; attempt < MAX_POLL_ATTEMPTS; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
+        data = await _fetchSentimentOnce(symbol);
+
+        if (data.status !== 'queued') {
+          break;
+        }
+      }
     }
-    const data = await res.json();
-    return { ...data, is_fallback: false };
+
+    if (onStatusChange) onStatusChange(data.status || 'ready');
+    return { ...data, is_fallback: data.status === 'fallback' };
   } catch (err) {
     console.warn(
       `Sentinel API offline for ${symbol}, using fallback sentiment:`,
       err.message
     );
+    if (onStatusChange) onStatusChange('fallback');
     return getMockSentiment(symbol);
   }
 }

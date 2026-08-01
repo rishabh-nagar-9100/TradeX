@@ -53,8 +53,9 @@ const TOPIC_CONFIG = {
 
 export default function SentinelView({ activeStock }) {
   const [activeTab, setActiveTab] = useState('sentiment');
-  const { sentiment, backtest, loading, refetch } = useSentinelData(activeStock);
+  const { sentiment, backtest, loading, signalStatus, refetch } = useSentinelData(activeStock);
 
+  const isQueued = signalStatus === 'queued';
   const score = sentiment?.sentiment_score ?? 0;
   const confidence = Math.round((sentiment?.confidence ?? 0.85) * 100);
   const modelName = (sentiment?.model_name || 'FinBERT').toUpperCase();
@@ -93,9 +94,19 @@ export default function SentinelView({ activeStock }) {
               <span className="px-2.5 py-0.5 text-xs font-semibold rounded-md bg-brand-500/10 text-brand-500 border border-brand-500/20">
                 {modelName}
               </span>
-              {isFallback && (
+              {isQueued && (
+                <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 animate-pulse">
+                  ⏳ Calculating Signal...
+                </span>
+              )}
+              {isFallback && !isQueued && (
                 <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-amber-500/10 text-amber-500 border border-amber-500/20">
                   Demo Mode
+                </span>
+              )}
+              {signalStatus === 'ready' && !isFallback && (
+                <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  ● Live
                 </span>
               )}
             </div>
