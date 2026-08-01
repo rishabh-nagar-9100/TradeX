@@ -83,35 +83,37 @@ export default function SentinelView({ activeStock }) {
   return (
     <div className="fade-in space-y-6">
       {/* Header Banner */}
-      <div className="glass rounded-2xl p-6 relative overflow-hidden flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-2xl bg-brand-500/10 text-brand-500">
-            <Brain className="w-8 h-8" />
+      <div className="glass rounded-2xl p-4 sm:p-6 relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-start sm:items-center gap-3 w-full sm:w-auto">
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-brand-500/10 text-brand-500 flex-shrink-0">
+            <Brain className="w-6 h-6 sm:w-8 sm:h-8" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold">Sentinel Quant AI Intelligence Center</h1>
-              <span className="px-2.5 py-0.5 text-xs font-semibold rounded-md bg-brand-500/10 text-brand-500 border border-brand-500/20">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg sm:text-2xl font-bold leading-tight truncate">
+              Sentinel Quant AI Intelligence Center
+            </h1>
+            <div className="flex flex-wrap items-center gap-2 mt-1.5">
+              <span className="px-2 py-0.5 text-[11px] sm:text-xs font-semibold rounded-md bg-brand-500/10 text-brand-500 border border-brand-500/20">
                 {modelName}
               </span>
               {isQueued && (
-                <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 animate-pulse">
+                <span className="px-2 py-0.5 text-[11px] sm:text-xs font-semibold rounded-md bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 animate-pulse">
                   ⏳ Calculating Signal...
                 </span>
               )}
               {isFallback && !isQueued && (
-                <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                <span className="px-2 py-0.5 text-[11px] sm:text-xs font-semibold rounded-md bg-amber-500/10 text-amber-500 border border-amber-500/20">
                   Demo Mode
                 </span>
               )}
               {signalStatus === 'ready' && !isFallback && (
-                <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="px-2 py-0.5 text-[11px] sm:text-xs font-semibold rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   ● Live
                 </span>
               )}
             </div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Point-in-Time Form 8-K & News Sentiment Engine for{' '}
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              Point-in-Time Disclosures & News Sentiment Engine for{' '}
               <span className="font-bold text-slate-900 dark:text-white">{activeStock}</span>
             </p>
           </div>
@@ -119,7 +121,7 @@ export default function SentinelView({ activeStock }) {
 
         <button
           onClick={refetch}
-          className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+          className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
         >
           <RefreshCw className="w-4 h-4" />
           Refresh Signal
@@ -127,10 +129,10 @@ export default function SentinelView({ activeStock }) {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl max-w-fit gap-1">
+      <div className="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl w-full overflow-x-auto scrollbar-none gap-1">
         <button
           onClick={() => setActiveTab('sentiment')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition flex-shrink-0 ${
             activeTab === 'sentiment'
               ? 'bg-white dark:bg-dark-card text-brand-500 shadow-sm'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
@@ -142,7 +144,7 @@ export default function SentinelView({ activeStock }) {
 
         <button
           onClick={() => setActiveTab('backtest')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition flex-shrink-0 ${
             activeTab === 'backtest'
               ? 'bg-white dark:bg-dark-card text-brand-500 shadow-sm'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
@@ -154,7 +156,7 @@ export default function SentinelView({ activeStock }) {
 
         <button
           onClick={() => setActiveTab('report')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition flex-shrink-0 ${
             activeTab === 'report'
               ? 'bg-white dark:bg-dark-card text-brand-500 shadow-sm'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
@@ -166,7 +168,7 @@ export default function SentinelView({ activeStock }) {
 
         <button
           onClick={() => setActiveTab('architecture')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition flex-shrink-0 ${
             activeTab === 'architecture'
               ? 'bg-white dark:bg-dark-card text-brand-500 shadow-sm'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
@@ -325,7 +327,7 @@ export default function SentinelView({ activeStock }) {
 
       {/* Tab 3: Interactive Plotly HTML Report */}
       {activeTab === 'report' && (
-        <div className="glass rounded-2xl p-4 h-[650px] w-full overflow-hidden fade-in">
+        <div className="glass rounded-2xl p-2 sm:p-4 h-[480px] sm:h-[650px] w-full overflow-hidden fade-in">
           <iframe
             src={reportUrl}
             title="Sentinel Plotly Interactive Report"
